@@ -1,0 +1,30 @@
+{
+  "kind": "univ4_hook",
+  "hook": {
+    "contract": "DaemonHook",
+    "constructorArgs": [
+      "$poolManager",
+      "$factory",
+      "$token",
+      "$owner"
+    ],
+    "permissions": [
+      "beforeInitialize",
+      "beforeSwap",
+      "afterSwap"
+    ]
+  },
+  "token": {
+    "contract": "DaemonToken",
+    "name": "DAEMON",
+    "symbol": "DAEMON",
+    "decimals": 18
+  },
+  "pool": {
+    "pairedCurrency": "0x0000000000000000000000000000000000000000",
+    "fee": 12500,
+    "tickSpacing": 60,
+    "initialPrice": "79228162514264337593543950336"
+  },
+  "notes": "DAEMON (DAEMON) on Ethereum, paired with native ETH. Logo: https://imdfamily.com/daemon-seated-pepe.webp. DaemonToken is a plain fixed-supply OpenZeppelin ERC-20 (1,000,000,000 DAEMON, 18 decimals) minted once to its deployer, the launch factory; no constructor arguments, no owner, mint, pause, tax or blocklist. DaemonHook(IPoolManager poolManager_, address factory_, address token_, address owner_) is a zero-fee gate: it charges NO hook fee, always returns a zero BeforeSwapDelta, a zero afterSwap delta and no LP fee override (0), declares no *ReturnDelta and no liquidity or donate permission, holds no funds, has no fee recipient, treasury, claim, setter, pause, game, signer, oracle, NFT gate or season. owner_ is Ownable's owner and has no privileged function at all, so an extra fee can never be enabled later. beforeInitialize accepts exactly one pool, once, only when called by the PoolManager with sender == factory_ ($factory), currency0 == native ETH, currency1 == token_ ($token), fee == 12500 and tickSpacing == 60; any other pool, fee (0 and the dynamic flag included), sender or a second initialization reverts. beforeSwap and afterSwap accept only the PoolManager and only the initialized pool's key. Standard platform LP fee only: pool.fee 12500 (1.25%) is the pool's real LP fee, which the hook requires and the factory splits 80% to the payer and 20% to the network; the hook adds zero on top. Initial cap: the launch policy opens the pool at 10 ETH for the whole supply; the deployer derives the opening sqrtPriceX96 from that cap and the token's address, so pool.initialPrice is written as the launch facts give it and is not the opening price. Allocation (factory policy, not manifest fields): 10% swarm to the MerkleDistributor, poolBps 8300 to the pool, remainder 7% to 0x5ed4ecc313a55d72842c5b3abbaa0c67f0fb0334, the existing immutable 9:3:2 allocation router, which is not redeployed or substituted. Recipient authorization requirement: after launch the actual current requester must call factory.setRequester(launchNumber, 0x81e5b64e1bc3d9ae681812d516953f05b1b964b2) to direct the ENTIRE creator fee share to that approved community/NFT purchase wallet, never GameRewards or the allocation router; this is separate from the token owner and cannot be executed by anyone else, and no contract here stores that wallet. Fee collection is the factory's zero-liquidity collect, paid out as ETH and/or DAEMON with no automatic conversion to imdUSD and no automatic NFT purchase or distribution; the hook declares no liquidity callbacks, so nothing can block the collect. Signed artwork NFT and auction are deferred."
+}
