@@ -1,0 +1,25 @@
+# Foundry build output
+out/
+cache/
+broadcast/
+
+# Local scratch space (never submitted)
+test/scratch/
+
+# Vendored dependencies are committed as plain files; nested submodule metadata is not
+**/.gitmodules
+lib/**/.git
+
+# Environment and editor files
+.env
+.env.*
+.idea
+.vscode
+.mcp.json
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.ripgreprc
